@@ -24,8 +24,8 @@ function VisualizarTorneios() {
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
   const [formato, setFormato] = useState('');
-  const [quantidadeEquipesMaxima, setQuantidadeEquipesMaxima] = useState('');
-  const [tamanhoMaximoElenco, setTamanhoMaximoElenco] = useState('');
+  const [quantidadeEquipes, setQuantidadeEquipes] = useState('');
+  const [descricao, setDescricao] = useState('');
   const [dados, setDados] = React.useState([]);
 
   function inicializar() {
@@ -33,14 +33,14 @@ function VisualizarTorneios() {
       setId('');
       setNome('');
       setFormato('');
-      setQuantidadeEquipesMaxima('');
-      setTamanhoMaximoElenco('');
+      setQuantidadeEquipes('');
+      setDescricao('');
     } else {
       setId(dados.id);
       setNome(dados.nome);
       setFormato(dados.formato);
-      setQuantidadeEquipesMaxima(dados.quantidadeEquipesMaxima);
-      setTamanhoMaximoElenco(dados.tamanhoMaximoElenco);
+      setQuantidadeEquipes(dados.quantidadeEquipes);
+      setDescricao(dados.descricao);
     }
   }
 
@@ -53,8 +53,8 @@ function VisualizarTorneios() {
       setId(dados.id);
       setNome(dados.nome);
       setFormato(dados.formato);
-      setQuantidadeEquipesMaxima(dados.quantidadeEquipesMaxima);
-      setTamanhoMaximoElenco(dados.tamanhoMaximoElenco);
+      setQuantidadeEquipes(dados.quantidadeEquipes);
+      setDescricao(dados.descricao);
     }
   }
 
@@ -77,8 +77,8 @@ function VisualizarTorneios() {
                   value={nome}
                   className='form-control'
                   name='nome'
-                  onChange={(e) => setNome(e.target.value)}
                   disabled
+                  onChange={(e) => setNome(e.target.value)}
                 />
               </FormGroup>
               <FormGroup label='Formato: *' htmlFor='selectFormato'>
@@ -87,8 +87,8 @@ function VisualizarTorneios() {
                   id='selectFormato'
                   name='idFormato'
                   value={formato}
-                  onChange={(e) => setFormato(e.target.value)}
                   disabled
+                  onChange={(e) => setFormato(e.target.value)}
                 >
                   <option value='0'>
                     {' '}
@@ -104,52 +104,30 @@ function VisualizarTorneios() {
                   </option>
                 </select>
               </FormGroup>
-              <FormGroup label='Quantidade de Equipes: *' htmlFor='selectQuantidadeEquipesMaxima'>
-                <select
-                  className='form-select'
-                  id='selectQuantidadeEquipesMaxima'
-                  name='idQuantidadeEquipesMaxima'
-                  value={quantidadeEquipesMaxima}
-                  onChange={(e) => setQuantidadeEquipesMaxima(e.target.value)}
+              <FormGroup label='Quantidade de Equipes: *' htmlFor='selectQuantidadeEquipes'>
+                <input
+                  type='number'
+                  id='inputQuantidadeEquipes'
+                  value={quantidadeEquipes}
+                  className='form-control'
+                  name='quantidadeEquipes'
+                  min={2}
                   disabled
-                >
-                  <option value='0'>
-                    {' '}
-                  </option>
-                  <option value='4'>
-                    {'4'}
-                  </option>
-                  <option value='8'>
-                    {'8'}
-                  </option>
-                  <option value='16'>
-                    {'16'}
-                  </option>
-                </select>
+                  onChange={(e) => setQuantidadeEquipes(e.target.value)}
+                />
               </FormGroup>
 
-              <FormGroup label='Tamanho Máximo de elenco: *' htmlFor='selectTamanhoMaximoElenco'>
-                <select
-                  className='form-select'
-                  id='selectTamanhoMaximoElenco'
-                  name='idTamanhoMaximoElenco'
-                  value={tamanhoMaximoElenco}
-                  onChange={(e) => setQuantidadeEquipesMaxima(e.target.value)}
+
+              <FormGroup label='Descrição: *' htmlFor='selectDescricao'>
+                <input
+                  type='text'
+                  id='inputDescricao'
+                  value={descricao}
+                  className='form-control'
+                  name='descricao'
                   disabled
-                >
-                  <option value='0'>
-                    {' '}
-                  </option>
-                  <option value='18'>
-                    {'18'}
-                  </option>
-                  <option value='23'>
-                    {'23'}
-                  </option>
-                  <option value='26'>
-                    {'26'}
-                  </option>
-                </select>
+                  onChange={(e) => setDescricao(e.target.value)}
+                />
               </FormGroup>
 
             </div>

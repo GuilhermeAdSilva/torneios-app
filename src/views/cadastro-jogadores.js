@@ -22,9 +22,7 @@ function CadastroJogadores() {
 
   const [id, setId] = useState("");
   const [nome, setNome] = useState("");
-  const [sexo, setSexo] = useState("");
   const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmacaoSenha, setConfirmacaoSenha] = useState("");
   const [dados, setDados] = React.useState([]);
@@ -33,24 +31,20 @@ function CadastroJogadores() {
     if (idParam == null) {
       setId("");
       setNome("");
-      setSexo("");
       setEmail("");
-      setTelefone("");
       setSenha("");
       setConfirmacaoSenha("");
     } else {
       setId(dados.id);
       setNome(dados.nome);
-      setSexo(dados.sexo);
       setEmail(dados.email);
-      setTelefone(dados.telefone);
       setSenha(dados.senha);
       setConfirmacaoSenha(dados.confirmacaoSenha);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, sexo, email, telefone, senha, confirmacaoSenha };
+    let data = { id, nome, email, senha, confirmacaoSenha };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -86,9 +80,7 @@ function CadastroJogadores() {
       });
       setId(dados.id);
       setNome(dados.nome);
-      setSexo(dados.sexo);
       setEmail(dados.email);
-      setTelefone(dados.telefone);
       setSenha(dados.senha);
       setConfirmacaoSenha(dados.confirmacaoSenha);
     }
@@ -150,47 +142,6 @@ function CadastroJogadores() {
                   name="confirmacaoSenha"
                   onChange={(e) => setConfirmacaoSenha(e.target.value)}
                 />
-              </FormGroup>
-
-              <FormGroup label="Telefone:" htmlFor="inputTelefone">
-                <input
-                  type="text"
-                  id="inputTelefone"
-                  value={telefone}
-                  className="form-control"
-                  name="telefone"
-                  onChange={(e) => setTelefone(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label="Sexo: *" htmlFor="inputSexo">
-                <div className="aura">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="checkSexoF"
-                    name="sexo"
-                    value="F"
-                    checked={sexo === "F"}
-                    onChange={(e) => setSexo(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="checkSexoF">
-                    Feminino
-                  </label>
-
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="checkSexoM"
-                    name="sexo"
-                    value="M"
-                    checked={sexo === "M"}
-                    onChange={(e) => setSexo(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="checkSexoM">
-                    Masculino
-                  </label>
-                </div>
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction="row">

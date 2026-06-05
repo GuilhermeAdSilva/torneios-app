@@ -24,8 +24,8 @@ function CadastroTorneios() {
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
   const [formato, setFormato] = useState('');
-  const [quantidadeEquipesMaxima, setQuantidadeEquipesMaxima] = useState('');
-  const [tamanhoMaximoElenco, setTamanhoMaximoElenco] = useState('');
+  const [quantidadeEquipes, setQuantidadeEquipes] = useState('');
+  const [descricao, setDescricao] = useState('');
   const [dados, setDados] = React.useState([]);
 
   function inicializar() {
@@ -33,19 +33,19 @@ function CadastroTorneios() {
       setId('');
       setNome('');
       setFormato('');
-      setQuantidadeEquipesMaxima('');
-      setTamanhoMaximoElenco('');
+      setQuantidadeEquipes('');
+      setDescricao('');
     } else {
       setId(dados.id);
       setNome(dados.nome);
       setFormato(dados.formato);
-      setQuantidadeEquipesMaxima(dados.quantidadeEquipesMaxima);
-      setTamanhoMaximoElenco(dados.tamanhoMaximoElenco);
+      setQuantidadeEquipes(dados.quantidadeEquipes);
+      setDescricao(dados.descricao);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, formato, quantidadeEquipesMaxima, tamanhoMaximoElenco };
+    let data = { id, nome, formato, quantidadeEquipes, descricao };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -82,8 +82,8 @@ function CadastroTorneios() {
       setId(dados.id);
       setNome(dados.nome);
       setFormato(dados.formato);
-      setQuantidadeEquipesMaxima(dados.quantidadeEquipesMaxima);
-      setTamanhoMaximoElenco(dados.tamanhoMaximoElenco);
+      setQuantidadeEquipes(dados.quantidadeEquipes);
+      setDescricao(dados.descricao);
     }
   }
 
@@ -131,50 +131,28 @@ function CadastroTorneios() {
                   </option>
                 </select>
               </FormGroup>
-              <FormGroup label='Quantidade de Equipes: *' htmlFor='selectQuantidadeEquipesMaxima'>
-                <select
-                  className='form-select'
-                  id='selectQuantidadeEquipesMaxima'
-                  name='idQuantidadeEquipesMaxima'
-                  value={quantidadeEquipesMaxima}
-                  onChange={(e) => setQuantidadeEquipesMaxima(e.target.value)}
-                >
-                  <option value='0'>
-                    {' '}
-                  </option>
-                  <option value='4'>
-                    {'4'}
-                  </option>
-                  <option value='8'>
-                    {'8'}
-                  </option>
-                  <option value='16'>
-                    {'16'}
-                  </option>
-                </select>
+              <FormGroup label='Quantidade de Equipes: *' htmlFor='selectQuantidadeEquipes'>
+                <input
+                  type='number'
+                  id='inputQuantidadeEquipes'
+                  value={quantidadeEquipes}
+                  className='form-control'
+                  name='quantidadeEquipes'
+                  min={2}
+                  onChange={(e) => setQuantidadeEquipes(e.target.value)}
+                />
               </FormGroup>
 
-              <FormGroup label='Tamanho Máximo de elenco: *' htmlFor='selectTamanhoMaximoElenco'>
-                <select
-                  className='form-select'
-                  id='selectTamanhoMaximoElenco'
-                  name='idTamanhoMaximoElenco'
-                  value={tamanhoMaximoElenco}
-                  onChange={(e) => setQuantidadeEquipesMaxima(e.target.value)}
-                >
-                  <option value='0'>
-                    {' '}
-                  </option>
-                  <option value='18'>
-                    {'18'}
-                  </option>
-                  <option value='23'>
-                    {'23'}
-                  </option>
-                  <option value='26'>
-                    {'26'}
-                  </option>
-                </select>
+
+              <FormGroup label='Descrição: *' htmlFor='selectDescricao'>
+                <input
+                  type='text'
+                  id='inputDescricao'
+                  value={descricao}
+                  className='form-control'
+                  name='descricao'
+                  onChange={(e) => setDescricao(e.target.value)}
+                />
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction='row'>

@@ -23,26 +23,20 @@ function VisualizarEquipes() {
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
-  const [idTecnico, setIdTecnico] = useState(0);
-  const [idAssociacaoEsportiva, setIdAssociacaoEsportiva] = useState(0);
   const [dados, setDados] = React.useState([]);
 
   function inicializar() {
     if (idParam == null) {
       setId('');
       setNome('');
-      setIdTecnico(0);
-      setIdAssociacaoEsportiva(0);
     } else {
       setId(dados.id);
       setNome(dados.nome);
-      setIdTecnico(dados.idTecnico);
-      setIdAssociacaoEsportiva(dados.idAssociacaoEsportiva);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, idTecnico, idAssociacaoEsportiva };
+    let data = { id, nome };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -78,33 +72,14 @@ function VisualizarEquipes() {
       });
       setId(dados.id);
       setNome(dados.nome);
-      setIdTecnico(dados.idTecnico);
-      setIdAssociacaoEsportiva(dados.idAssociacaoEsportiva);
     }
   }
-
-  const [dadosTecnicos, setDadosTecnicos] = React.useState(null);
-  const [dadosAssociacoesEsportivas, setDadosAssociacoesEsportivas] = React.useState(null);
-  
-  useEffect(() => {
-    axios.get(`${BASE_URL}/tecnicos`).then((response) => {
-      setDadosTecnicos(response.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    axios.get(`${BASE_URL2}/associacoesEsportivas`).then((response) => {
-      setDadosAssociacoesEsportivas(response.data);
-    });
-  }, []);
 
   useEffect(() => {
     buscar(); // eslint-disable-next-line
   }, [id]);
 
   if (!dados) return null;
-  if (!dadosTecnicos) return null
-  if (!dadosAssociacoesEsportivas) return null
 
   return (
     <div className='container'>
@@ -122,46 +97,6 @@ function VisualizarEquipes() {
                   onChange={(e) => setNome(e.target.value)}
                   disabled
                 />
-              </FormGroup>
-
-              <FormGroup label='Tecnico: *' htmlFor='selectTecnico'>
-                <select
-                  className='form-select'
-                  id='selectTecnico'
-                  name='idTecnico'
-                  value={idTecnico}
-                  onChange={(e) => setIdTecnico(e.target.value)}
-                  disabled
-                >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosTecnicos.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nome}
-                    </option>
-                  ))}
-                </select>
-              </FormGroup>
-
-              <FormGroup label='Associação Esportiva: *' htmlFor='selectAssociacaoEsportiva'>
-                <select
-                  className='form-select'
-                  id='selectAssociacaoEsportiva'
-                  name='idAssociacaoEsportiva'
-                  value={idAssociacaoEsportiva}
-                  onChange={(e) => setIdAssociacaoEsportiva(e.target.value)}
-                  disabled
-                >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosAssociacoesEsportivas.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nome}
-                    </option>
-                  ))}
-                </select>
               </FormGroup>
 
             </div>

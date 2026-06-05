@@ -22,9 +22,7 @@ function VisualizarJogadores() {
 
   const [id, setId] = useState("");
   const [nome, setNome] = useState("");
-  const [sexo, setSexo] = useState("");
   const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmacaoSenha, setConfirmacaoSenha] = useState("");
   const [dados, setDados] = React.useState([]);
@@ -33,17 +31,13 @@ function VisualizarJogadores() {
     if (idParam == null) {
       setId("");
       setNome("");
-      setSexo("");
       setEmail("");
-      setTelefone("");
       setSenha("");
       setConfirmacaoSenha("");
     } else {
       setId(dados.id);
       setNome(dados.nome);
-      setSexo(dados.sexo);
       setEmail(dados.email);
-      setTelefone(dados.telefone);
       setSenha(dados.senha);
       setConfirmacaoSenha(dados.confirmacaoSenha);
     }
@@ -57,9 +51,7 @@ function VisualizarJogadores() {
       });
       setId(dados.id);
       setNome(dados.nome);
-      setSexo(dados.sexo);
       setEmail(dados.email);
-      setTelefone(dados.telefone);
       setSenha(dados.senha);
       setConfirmacaoSenha(dados.confirmacaoSenha);
     }
@@ -100,52 +92,6 @@ function VisualizarJogadores() {
                   disabled
                 />
               </FormGroup>
-
-
-              <FormGroup label="Telefone:" htmlFor="inputTelefone">
-                <input
-                  type="text"
-                  id="inputTelefone"
-                  value={telefone}
-                  className="form-control"
-                  name="telefone"
-                  onChange={(e) => setTelefone(e.target.value)}
-                  disabled
-                />
-              </FormGroup>
-
-              <FormGroup label="Sexo: *" htmlFor="inputSexo">
-                <div className="aura">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="checkSexoF"
-                    name="sexo"
-                    value="F"
-                    checked={sexo === "F"}
-                    onChange={(e) => setSexo(e.target.value)}
-                    disabled
-                  />
-                  <label className="form-check-label" htmlFor="checkSexoF">
-                    Feminino
-                  </label>
-
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="checkSexoM"
-                    name="sexo"
-                    value="M"
-                    checked={sexo === "M"}
-                    onChange={(e) => setSexo(e.target.value)}
-                    disabled
-                  />
-                  <label className="form-check-label" htmlFor="checkSexoM">
-                    Masculino
-                  </label>
-                </div>
-              </FormGroup>
-
             </div>
           </div>
         </div>
