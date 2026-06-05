@@ -1,0 +1,64 @@
+.form-group {
+    margin-bottom: 1.2rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.card.md-3 {
+    width: 41rem;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+label {
+    font-size: 1.05rem;
+}
+
+h3.card-header {
+    font-size: 2rem;
+}
+
+button.btn.btn-warning {
+    margin-bottom: 0.8rem;
+}
+
+.aura > input {
+    margin-right: 0.2rem;
+}
+
+label.form-check-label {
+    margin-right: 1.5rem;
+}
+
+.icon-lucide {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.emoji-est {
+    font-size: 3rem;
+}
+
+.container-menu {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.content-menu {
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+  padding: 30px;
+}
+
+.botao-logout {
+    background: none;
+    border: none;
+    color: white;
+}
