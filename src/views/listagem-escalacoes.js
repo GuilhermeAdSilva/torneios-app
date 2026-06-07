@@ -14,9 +14,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import axios from 'axios';
-import { BASE_URL4 } from '../config/axios';
+import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL4}/escalacoes`;
+const baseURL = `${BASE_URL}/escalacoes`;
 
 function ListagemEscalacoes() {
   const navigate = useNavigate();

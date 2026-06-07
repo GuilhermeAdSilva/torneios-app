@@ -8,7 +8,7 @@ import VisualizarEquipes from './views/visualizar-equipes';
 
 import ListagemInscricoes from './views/listagem-inscricoes';
 import CadastroInscricoes from './views/cadastro-inscricoes';
-import ProcurarInscricoes from './views/procurar-inscricoes';
+import VisualizarInscricoes from './views/visualizar-inscricoes';
 
 import ListagemJogadores from './views/listagem-jogadores';
 import CadastroJogadores from './views/cadastro-jogadores';
@@ -43,7 +43,7 @@ import CadastroVermelhos from './views/cadastro-cartoes-vermelhos';
 
 import ListagemJogadoresEquipe from './views/listagem-jogadores-equipe';
 import CadastrojogadoresEquipe from './views/cadastro-jogadores-equipe';
-import CadastroResultados from './views/cadastro-resultado';
+import CadastroResultados from './views/cadastro-resultados';
 
 
 function Rotas() {
@@ -70,7 +70,7 @@ function Rotas() {
 
         <Route path="/listagem-inscricoes" element={<ListagemInscricoes />} />
         <Route path="/cadastro-inscricoes/:idParam?" element={<CadastroInscricoes />} />
-         <Route path="/procurar-inscricoes/:idParam?" element={<ProcurarInscricoes />} />
+         <Route path="/procurar-inscricoes/:idParam?" element={<VisualizarInscricoes />} />
 
         <Route path="/listagem-jogadores" element={<ListagemJogadores />} />
         <Route path="/cadastro-jogadores/:idParam?" element={<CadastroJogadores />} />

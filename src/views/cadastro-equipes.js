@@ -19,7 +19,7 @@ function CadastroEquipes() {
 
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL2}/equipes`;
+  const baseURL = `${BASE_URL}/equipes`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');

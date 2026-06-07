@@ -12,9 +12,9 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import axios from 'axios';
-import { BASE_URL5 } from '../config/axios';
+import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL5}/elenco`;
+const baseURL = `${BASE_URL}/elenco`;
 
 function ListagemJogadoresEquipe() {
   const navigate = useNavigate();

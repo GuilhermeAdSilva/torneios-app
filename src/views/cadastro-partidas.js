@@ -11,15 +11,14 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
-import { BASE_URL3 } from '../config/axios';
-import { BASE_URL2 } from '../config/axios';
+import { BASE_URL } from '../config/axios';
 
 function CadastroPartidas() {
   const { idParam } = useParams();
 
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL3}/partidas`;
+  const baseURL = `${BASE_URL}/partidas`;
 
   const [id, setId] = useState('');
   const [idAssociacaoMandante, setIdAssociacaoMandante] = useState(0);
@@ -149,13 +148,13 @@ function CadastroPartidas() {
   const [dadosEdicoesTorneios, setDadosEdicoesTorneios] = React.useState(null);
   
   useEffect(() => {
-    axios.get(`${BASE_URL2}/equipes`).then((response) => {
+    axios.get(`${BASE_URL}/equipes`).then((response) => {
       setDadosEquipes(response.data);
     });
   }, []);
 
   useEffect(() => {
-    axios.get(`${BASE_URL2}/EdicoesTorneios`).then((response) => {
+    axios.get(`${BASE_URL}/EdicoesTorneios`).then((response) => {
       setDadosEdicoesTorneios(response.data);
     });
   }, []);

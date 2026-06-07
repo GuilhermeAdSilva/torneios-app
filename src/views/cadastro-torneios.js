@@ -11,7 +11,7 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
-import { BASE_URL2 } from '../config/axios';
+import { BASE_URL } from '../config/axios';
 import { FormControl } from '@mui/material';
 
 function CadastroTorneios() {
@@ -19,7 +19,7 @@ function CadastroTorneios() {
 
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL2}/torneios`;
+  const baseURL = `${BASE_URL}/torneios`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');

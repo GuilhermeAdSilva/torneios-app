@@ -11,20 +11,19 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
-import { BASE_URL3 } from '../config/axios';
-import { BASE_URL2 } from '../config/axios';
+import { BASE_URL } from '../config/axios';
 
 function ProcurarInscricoes() {
   const { idParam } = useParams();
 
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL3}/inscricoes`;
+  const baseURL = `${BASE_URL}/inscricoes`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
   const [idEquipe, setIdEquipe] = useState(0);
-  const [idEdicaoTorneio, setIdEdicaoTorneio] = useState(0);
+  const [idTorneio, setIdTorneio] = useState(0);
   const [dados, setDados] = React.useState([]);
 
   function inicializar() {
@@ -32,17 +31,17 @@ function ProcurarInscricoes() {
       setId('');
       setNome('');
       setIdEquipe(0);
-      setIdEdicaoTorneio(0);
+      setIdTorneio(0);
     } else {
       setId(dados.id);
       setNome(dados.nome);
       setIdEquipe(dados.idEquipe);
-      setIdEdicaoTorneio(dados.idEdicaoTorneio);
+      setIdTorneio(dados.idTorneio);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, idEquipe, idEdicaoTorneio };
+    let data = { id, nome, idEquipe, idTorneio };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -79,7 +78,7 @@ function ProcurarInscricoes() {
       setId(dados.id);
       setNome(dados.nome);
       setIdEquipe(dados.idEquipe);
-      setIdEdicaoTorneio(dados.idEdicaoTorneio);
+      setIdTorneio(dados.idTorneio);
     }
   }
 
@@ -87,13 +86,13 @@ function ProcurarInscricoes() {
   const [dadosEdicoesTorneios, setDadosEdicoesTorneios] = React.useState(null);
   
   useEffect(() => {
-    axios.get(`${BASE_URL2}/equipes`).then((response) => {
+    axios.get(`${BASE_URL}/equipes`).then((response) => {
       setDadosEquipes(response.data);
     });
   }, []);
 
   useEffect(() => {
-    axios.get(`${BASE_URL2}/EdicoesTorneios`).then((response) => {
+    axios.get(`${BASE_URL}/EdicoesTorneios`).then((response) => {
       setDadosEdicoesTorneios(response.data);
     });
   }, []);
@@ -132,20 +131,20 @@ function ProcurarInscricoes() {
                 </select>
               </FormGroup>
 
-              <FormGroup label='Edição Torneio: *' htmlFor='selectEdicaoTorneio'>
+              <FormGroup label='Torneio: *' htmlFor='selectTorneio'>
                 <select
                   className='form-select'
-                  id='selectEdicaoTorneio'
-                  name='idEdicaoTorneio'
-                  value={idEdicaoTorneio}
-                  onChange={(e) => setIdEdicaoTorneio(e.target.value)}
+                  id='selectTorneio'
+                  name='idTorneio'
+                  value={idTorneio}
+                  onChange={(e) => setIdTorneio(e.target.value)}
                 >
                   <option key='0' value='0'>
                     {' '}
                   </option>
                   {dadosEdicoesTorneios.map((dado) => (
                     <option key={dado.id} value={dado.id}>
-                      {dado.nomeEdicao}
+                      {dado.nomeTorneio}
                     </option>
                   ))}
                 </select>

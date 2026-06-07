@@ -14,9 +14,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import axios from 'axios';
-import { BASE_URL3 } from '../config/axios';
+import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL3}/inscricoes`;
+const baseURL = `${BASE_URL}/inscricoes`;
 
 function ListagemInscricoes() {
   const navigate = useNavigate();
@@ -85,7 +85,7 @@ function ListagemInscricoes() {
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.nomeEquipe}</td>
-                      {/* <td>{dado.nomeEdicao}</td> */}
+                      {/* <td>{dado.nomeTorneio}</td> */}
                       <td>
                         <Stack spacing={1} padding={0} direction='row' justifyContent={'center'}>
                           <IconButton

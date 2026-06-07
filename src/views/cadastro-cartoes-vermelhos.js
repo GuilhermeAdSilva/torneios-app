@@ -11,16 +11,14 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
-import { BASE_URL4 } from '../config/axios';
 import { BASE_URL } from '../config/axios';
-import { BASE_URL2 } from '../config/axios';
 
 function CadastroVermelhos() {
   const { idParam } = useParams();
 
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL4}/vermelhos`;
+  const baseURL = `${BASE_URL}/vermelhos`;
 
   const [id, setId] = useState('');
   const [idJogador, setIdJogador] = useState(0);
@@ -94,7 +92,7 @@ function CadastroVermelhos() {
   }, []);
 
   useEffect(() => {
-    axios.get(`${BASE_URL2}/edicoesTorneios`).then((response) => {
+    axios.get(`${BASE_URL}/edicoesTorneios`).then((response) => {
       setDadosCompeticoes(response.data);
     });
   }, []);

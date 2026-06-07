@@ -11,14 +11,14 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
-import { BASE_URL3 } from '../config/axios';
+import { BASE_URL } from '../config/axios';
 
 function CadastroResultados() {
   const { idParam } = useParams();
 
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL3}/resultados`;
+  const baseURL = `${BASE_URL}/resultados`;
 
   const [id, setId] = useState('');
   const [golsCasa, setGolsCasa] = useState('');

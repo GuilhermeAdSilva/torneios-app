@@ -14,19 +14,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import axios from 'axios';
-import { BASE_URL3 } from '../config/axios';
+import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL3}/resultados`;
+const baseURL = `${BASE_URL}/resultados`;
 
 function ListagemResultados() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-cursos`);
+    navigate(`/cadastro-resultados`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-cursos/${id}`);
+    navigate(`/cadastro-resultados/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -40,7 +40,7 @@ function ListagemResultados() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Arbitro excluído com sucesso!`);
+        mensagemSucesso(`Resultado excluído com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemResultados() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o arbitro`);
+        mensagemErro(`Erro ao excluir o resultado`);
       });
   }
 
@@ -76,20 +76,20 @@ function ListagemResultados() {
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>ID</th>
-                    <th scope='col'>ID Partida</th>
-                    <th scope='col'>Gols Time Mandante</th>
-                    <th scope='col'>Gols Time Visaitante</th>
+                    <th scope='col'>Equipe Mandante</th>
+                    <th scope='col'>Gols Equipe Mandante</th>
+                    <th scope='col'>Equipe Visitante</th>
+                    <th scope='col'>Gols Equipe Visitante</th>
                     <th scope='col'>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.id}</td>
-                      <td>{dado.idPartida}</td>
-                      <td>{dado.golCasa}</td>
-                      <td>{dado.golVisitante}</td>
+                      <td>{dado.nomeEquipeMandante}</td>
+                      <td>{dado.golsMandante}</td>
+                      <td>{dado.nomeEquipeVisitante}</td>
+                      <td>{dado.golsVisitante}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row' justifyContent={'center'}>
                           <IconButton

@@ -11,14 +11,14 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
-import { BASE_URL, BASE_URL2, BASE_URL5 } from '../config/axios';
+import { BASE_URL } from '../config/axios';
 
 function CadastrojogadoresEquipe() {
   const navigate = useNavigate();
 
   const { idParam, idEquipe: idEquipeParam } = useParams();
 
-  const baseURL = `${BASE_URL5}/elenco`;
+  const baseURL = `${BASE_URL}/elenco`;
 
   const [id, setId] = useState('');
   const [idEquipe, setIdEquipe] = useState(0);
@@ -89,7 +89,7 @@ function CadastrojogadoresEquipe() {
   }, []);
 
   useEffect(() => {
-    axios.get(`${BASE_URL2}/associacoesEsportivas`).then((response) => {
+    axios.get(`${BASE_URL}/associacoesEsportivas`).then((response) => {
       setDadosTimes(response.data);
     });
   }, []);

@@ -12,14 +12,13 @@ import '../custom.css';
 
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
-import { BASE_URL2 } from '../config/axios';
 
 function VisualizarEquipes() {
   const { idParam } = useParams();
 
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL2}/equipes`;
+  const baseURL = `${BASE_URL}/equipes`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
