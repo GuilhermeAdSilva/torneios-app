@@ -120,13 +120,13 @@ function CadastroTorneios() {
                   <option value='0'>
                     {' '}
                   </option>
-                  <option value='Pontos Corridos'>
+                  <option value='PONTOS_CORRIDOS'>
                     {'Pontos Corridos'}
                   </option>
-                  <option value='Mata-Mata'>
+                  <option value='MATA_MATA'>
                     {'Mata-Mata'}
                   </option>
-                  <option value='Fase de Grupos'>
+                  <option value='FASE_DE_GRUPOS'>
                     {'Fase de Grupos'}
                   </option>
                 </select>

@@ -18,7 +18,7 @@ function CadastrojogadoresEquipe() {
 
   const { idParam, idEquipe: idEquipeParam } = useParams();
 
-  const baseURL = `${BASE_URL}/elenco`;
+  const baseURL = `${BASE_URL}/jogadores`;
 
   const [id, setId] = useState('');
   const [idEquipe, setIdEquipe] = useState(0);
@@ -89,12 +89,6 @@ function CadastrojogadoresEquipe() {
   }, []);
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/associacoesEsportivas`).then((response) => {
-      setDadosTimes(response.data);
-    });
-  }, []);
-
-  useEffect(() => {
     buscar();
   }, [idParam]);
 
@@ -102,7 +96,7 @@ function CadastrojogadoresEquipe() {
     if (idEquipeParam) {
       setIdEquipe(Number(idEquipeParam));
     }
-  }, [idEquipeParam]);
+  }, [idEquipeParam])
 
   if (!dadosJogadores || !dadosTimes) return null;
 

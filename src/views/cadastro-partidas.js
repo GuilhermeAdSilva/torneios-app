@@ -22,7 +22,6 @@ function CadastroPartidas() {
 
   const [id, setId] = useState('');
   const [idTorneio, setIdTorneio] = useState(0);
-  const [nomeTorneio, setNomeTorneio] = useState(0);
   const [idResultado, setIdResultado] = useState(0);
   const [status, setStatus] = useState(0);
   
@@ -33,20 +32,18 @@ function CadastroPartidas() {
     if (idParam == null) {
       setId('');
       setIdTorneio("");
-      setNomeTorneio("");
       setIdResultado("");
       setStatus("");
     } else {
       setId(dados.id);
       setIdTorneio(dados.idTorneio);
-      setNomeTorneio(dados.nomeTorneio);
       setIdResultado(dados.idResultado);
       setStatus(dados.status);
     }
   }
 
   async function salvar() {
-    let data = { id, idTorneio, nomeTorneio, idResultado, status};
+    let data = { id, idTorneio, idResultado, status};
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -82,7 +79,6 @@ function CadastroPartidas() {
       });
       setId(dados.id);
       setIdTorneio(dados.idTorneio);
-      setNomeTorneio(dados.nomeTorneio);
       setIdResultado(dados.idResultado);
       setStatus(dados.status);
     }
@@ -129,15 +125,30 @@ function CadastroPartidas() {
                 </select>
               </FormGroup>
 
-               <FormGroup label='Status: *' htmlFor='inputStatus'>
-                <input
-                  type = "text"
-                  className='form-control'
-                  id='inputLocal'
+              <FormGroup label='Status: *' htmlFor='selectStatus'>
+                <select
+                  className='form-select'
+                  id='selectStatus'
                   name='status'
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
-                />
+                >
+                  <option value='0'>
+                    {' '}
+                  </option>
+                  <option value='PENDENTE'>
+                    {'Pendente'}
+                  </option>
+                  <option value='AO_VIVO'>
+                    {'Ao vivo'}
+                  </option>
+                  <option value='FINALIZADA'>
+                    {'Finalizada'}
+                  </option>
+                  <option value='CANCELADA'>
+                    {'Cancelada'}
+                  </option>
+                </select>
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction='row'>

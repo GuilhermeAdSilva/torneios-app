@@ -82,6 +82,7 @@ function ListagemPartidas() {
                     <th scope='col'>TIME A</th>
                     <th scope='col'>TIME B</th>
                     <th scope='col'>Status</th>
+                    <th scope='col'>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -91,7 +92,6 @@ function ListagemPartidas() {
                       <td>{dado.nomeCOLOCARTIMEAQUI}</td>
                       <td>{dado.nomeCOLOCARTIMEAQUI}</td>
                       <td>{dado.status}</td>
-                      <td><a href="cadastro-partidas"><Plus /></a></td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row' justifyContent={'center'}>
                           <IconButton

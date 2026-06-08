@@ -21,7 +21,6 @@ function CadastroInscricoes() {
   const baseURL = `${BASE_URL}/inscricoes`;
 
   const [id, setId] = useState('');
-  const [nome, setNome] = useState('');
   const [idEquipe, setIdEquipe] = useState(0);
   const [idTorneio, setIdTorneio] = useState(0);
   const [dados, setDados] = React.useState([]);
@@ -29,19 +28,17 @@ function CadastroInscricoes() {
   function inicializar() {
     if (idParam == null) {
       setId('');
-      setNome('');
       setIdEquipe(0);
       setIdTorneio(0);
     } else {
       setId(dados.id);
-      setNome(dados.nome);
       setIdEquipe(dados.idEquipe);
       setIdTorneio(dados.idTorneio);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, idEquipe, idTorneio };
+    let data = { id, idEquipe, idTorneio };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -49,8 +46,8 @@ function CadastroInscricoes() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Inscrição ${nome} cadastrada com sucesso!`);  
-          navigate(`/listagem-equipes`);
+          mensagemSucesso(`Inscrição cadastrada com sucesso!`);  
+          navigate(`/listagem-inscricoes`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -61,7 +58,7 @@ function CadastroInscricoes() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Inscrição ${nome} alterada com sucesso!`);
+          mensagemSucesso(`Inscrição alterada com sucesso!`);
           navigate(`/listagem-inscricoes`);
         })
         .catch(function (error) {
@@ -76,14 +73,13 @@ function CadastroInscricoes() {
         setDados(response.data);
       });
       setId(dados.id);
-      setNome(dados.nome);
       setIdEquipe(dados.idEquipe);
       setIdTorneio(dados.idTorneio);
     }
   }
 
   const [dadosEquipes, setDadosEquipes] = React.useState(null);
-  const [dadosEdicoesTorneios, setDadosEdicoesTorneios] = React.useState(null);
+  const [dadosTorneios, setDadosTorneios] = React.useState(null);
   
   useEffect(() => {
     axios.get(`${BASE_URL}/equipes`).then((response) => {
@@ -92,8 +88,8 @@ function CadastroInscricoes() {
   }, []);
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/EdicoesTorneios`).then((response) => {
-      setDadosEdicoesTorneios(response.data);
+    axios.get(`${BASE_URL}/torneios`).then((response) => {
+      setDadosTorneios(response.data);
     });
   }, []);
 
@@ -103,7 +99,7 @@ function CadastroInscricoes() {
 
   if (!dados) return null;
   if (!dadosEquipes) return null
-  if (!dadosEdicoesTorneios) return null
+  if (!dadosTorneios) return null
 
   return (
     <div className='container'>
@@ -142,9 +138,9 @@ function CadastroInscricoes() {
                   <option key='0' value='0'>
                     {' '}
                   </option>
-                  {dadosEdicoesTorneios.map((dado) => (
+                  {dadosTorneios.map((dado) => (
                     <option key={dado.id} value={dado.id}>
-                      {dado.nomeTorneio}
+                      {dado.nome}
                     </option>
                   ))}
                 </select>

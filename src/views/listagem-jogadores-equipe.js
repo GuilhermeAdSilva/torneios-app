@@ -14,7 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}/elenco`;
+const baseURL = `${BASE_URL}/jogadores`;
 
 function ListagemJogadoresEquipe() {
   const navigate = useNavigate();

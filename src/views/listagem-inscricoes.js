@@ -77,7 +77,7 @@ function ListagemInscricoes() {
                 <thead>
                   <tr>
                     <th scope='col'>Nome Time</th>
-                    {/* <th scope='col'>Nome Competição</th> */}
+                    <th scope='col'>Nome Torneio</th>
                     <th scope='col'>Ações</th>
                   </tr>
                 </thead>
@@ -85,7 +85,7 @@ function ListagemInscricoes() {
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.nomeEquipe}</td>
-                      {/* <td>{dado.nomeTorneio}</td> */}
+                      <td>{dado.nomeTorneio}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row' justifyContent={'center'}>
                           <IconButton
