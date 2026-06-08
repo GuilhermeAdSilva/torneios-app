@@ -28,7 +28,7 @@ function ListagemPartidas() {
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-resultados/${id}`);
+    navigate(`/cadastro-partidas/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -42,7 +42,7 @@ function ListagemPartidas() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Arbitro excluído com sucesso!`);
+        mensagemSucesso(`Partida excluída com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -50,7 +50,7 @@ function ListagemPartidas() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o arbitro`);
+        mensagemErro(`Erro ao excluir partida`);
       });
   }
 
@@ -78,20 +78,20 @@ function ListagemPartidas() {
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>Nome Competição</th>
-                    <th scope='col'>Nome Time Mandante</th>
-                    <th scope='col'>Nome Time Visitante</th>
-                    <th scope='col'>Adicionar Resultado</th>
-                    <th scope='col'>Ações</th>
+                    <th scope='col'>Nome Torneio</th>
+                    <th scope='col'>TIME A</th>
+                    <th scope='col'>TIME B</th>
+                    <th scope='col'>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.nomeEdicaoTorneio}</td>
-                      <td>{dado.nomeAssociacaoMandante}</td>
-                      <td>{dado.nomeAssociacaoVisitante}</td>
-                      <td><a href="cadastro-resultados"><Plus /></a></td>
+                      <td>{dado.nomeTorneio}</td>
+                      <td>{dado.nomeCOLOCARTIMEAQUI}</td>
+                      <td>{dado.nomeCOLOCARTIMEAQUI}</td>
+                      <td>{dado.status}</td>
+                      <td><a href="cadastro-partidas"><Plus /></a></td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row' justifyContent={'center'}>
                           <IconButton
