@@ -13,72 +13,60 @@ import '../custom.css';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-function CadastrojogadoresEquipe() {
+function CadastroJogadoresEquipe() {
   const navigate = useNavigate();
 
-  const { idParam, idEquipe: idEquipeParam } = useParams();
+  const { idEquipe: idEquipeParam } = useParams();
 
-  const baseURL = `${BASE_URL}/jogadores`;
-
-  const [id, setId] = useState('');
   const [idEquipe, setIdEquipe] = useState(0);
   const [nomeEquipe, setNomeEquipe] = useState('');
   const [idJogador, setIdJogador] = useState(0);
-  const [nomeJogador, setNomeJogador] = useState('');
-  const [dados, setDados] = useState([]);
 
   const [dadosJogadores, setDadosJogadores] = useState(null);
   const [dadosTimes, setDadosTimes] = useState(null);
 
   function inicializar() {
-    setId('');
-    setIdEquipe(0);
-    setNomeEquipe('');
     setIdJogador(0);
-    setNomeJogador('');
   }
 
   async function salvar() {
-    let data = {
-      id,
-      idEquipe,
-      nomeEquipe,
-      idJogador,
-      nomeJogador,
-    };
-
-    data = JSON.stringify(data);
-
     try {
-      if (!idParam) {
-        await axios.post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        });
-        mensagemSucesso('Inscrição realizada com sucesso!');
-        navigate('/listagem-equipes');
-      } else {
-        await axios.put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        });
-        mensagemSucesso('Inscrição alterada com sucesso!');
-        navigate('/listagem-inscricoes');
+      const jogador = dadosJogadores.find(
+        (j) => j.id === Number(idJogador)
+      );
+
+      if (!jogador) {
+        mensagemErro('Selecione um jogador');
+        return;
       }
+
+      const equipe = dadosTimes.find(
+        (e) => e.id === Number(idEquipe)
+      );
+
+      if (!equipe) {
+        mensagemErro('Equipe não encontrada');
+        return;
+      }
+
+      const jogadorAtualizado = {
+        ...jogador,
+        idEquipe: equipe.id,
+        nomeEquipe: equipe.nome,
+      };
+
+      await axios.put(
+        `${BASE_URL}/jogadores/${idJogador}`,
+        jogadorAtualizado
+      );
+
+      mensagemSucesso('Jogador adicionado à equipe com sucesso!');
+
+      navigate(`/listagem-jogadores-equipe/${idEquipe}`);
     } catch (error) {
-      mensagemErro(error?.response?.data || 'Erro ao salvar');
-    }
-  }
-
-  async function buscar() {
-    if (idParam) {
-      const response = await axios.get(`${baseURL}/${idParam}`);
-      const d = response.data;
-
-      setDados(d);
-      setId(d.id);
-      setIdEquipe(d.idEquipe);
-      setNomeEquipe(d.nomeEquipe);
-      setIdJogador(d.idJogador);
-      setNomeJogador(d.nomeJogador);
+      mensagemErro(
+        error?.response?.data || 'Erro ao adicionar jogador à equipe'
+      );
     }
   }
 
@@ -89,16 +77,27 @@ function CadastrojogadoresEquipe() {
   }, []);
 
   useEffect(() => {
-    buscar();
-  }, [idParam]);
+    axios.get(`${BASE_URL}/equipes`).then((response) => {
+      setDadosTimes(response.data);
+    });
+  }, []);
 
   useEffect(() => {
-    if (idEquipeParam) {
-      setIdEquipe(Number(idEquipeParam));
-    }
-  }, [idEquipeParam])
+    if (idEquipeParam && dadosTimes) {
+      const equipe = dadosTimes.find(
+        (e) => e.id === Number(idEquipeParam)
+      );
 
-  if (!dadosJogadores || !dadosTimes) return null;
+      if (equipe) {
+        setIdEquipe(equipe.id);
+        setNomeEquipe(equipe.nome);
+      }
+    }
+  }, [idEquipeParam, dadosTimes]);
+
+  if (!dadosJogadores || !dadosTimes) {
+    return null;
+  }
 
   return (
     <div className="container">
@@ -107,15 +106,15 @@ function CadastrojogadoresEquipe() {
           <div className="col-lg-12">
             <div className="bs-component">
 
-              <FormGroup label="Equipe: *" htmlFor="selectEquipe">
+              <FormGroup label="Equipe:" htmlFor="selectEquipe">
                 <select
                   className="form-select"
                   id="selectEquipe"
                   value={idEquipe}
-                  onChange={(e) => setIdEquipe(Number(e.target.value))}
                   disabled
                 >
                   <option value={0}></option>
+
                   {dadosTimes.map((dado) => (
                     <option key={dado.id} value={dado.id}>
                       {dado.nome}
@@ -124,14 +123,19 @@ function CadastrojogadoresEquipe() {
                 </select>
               </FormGroup>
 
-              <FormGroup label="Jogador: *" htmlFor="selectJogador">
+              <FormGroup label="Jogador:" htmlFor="selectJogador">
                 <select
                   className="form-select"
                   id="selectJogador"
                   value={idJogador}
-                  onChange={(e) => setIdJogador(Number(e.target.value))}
+                  onChange={(e) =>
+                    setIdJogador(Number(e.target.value))
+                  }
                 >
-                  <option value={0}></option>
+                  <option value={0}>
+                    Selecione um jogador
+                  </option>
+
                   {dadosJogadores.map((dado) => (
                     <option key={dado.id} value={dado.id}>
                       {dado.nome}
@@ -166,4 +170,4 @@ function CadastrojogadoresEquipe() {
   );
 }
 
-export default CadastrojogadoresEquipe;
+export default CadastroJogadoresEquipe;

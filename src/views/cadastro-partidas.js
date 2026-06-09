@@ -15,59 +15,63 @@ import { BASE_URL } from '../config/axios';
 
 function CadastroPartidas() {
   const { idParam } = useParams();
-
   const navigate = useNavigate();
 
   const baseURL = `${BASE_URL}/partidas`;
 
   const [id, setId] = useState('');
-  const [idTorneio, setIdTorneio] = useState(0);
-  const [idResultado, setIdResultado] = useState(0);
-  const [status, setStatus] = useState(0);
-  
 
-  const [dados, setDados] = React.useState([]);
+  const [idTorneio, setIdTorneio] = useState(0);
+  const [status, setStatus] = useState('PENDENTE');
+
+  const [dados, setDados] = useState([]);
+
+  const [dadosTorneios, setDadosTorneios] = useState(null);
 
   function inicializar() {
     if (idParam == null) {
       setId('');
-      setIdTorneio("");
-      setIdResultado("");
-      setStatus("");
+      setIdTorneio(0);
+      setStatus('PENDENTE');
     } else {
       setId(dados.id);
       setIdTorneio(dados.idTorneio);
-      setIdResultado(dados.idResultado);
       setStatus(dados.status);
     }
   }
 
   async function salvar() {
-    let data = { id, idTorneio, idResultado, status};
+    let data = {
+      id,
+      idTorneio,
+      status,
+    };
+
     data = JSON.stringify(data);
+
     if (idParam == null) {
       await axios
         .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
-        .then(function (response) {
-          mensagemSucesso(`Partida cadastrada com sucesso!`);  
-          navigate(`/listagem-partidas`);
+        .then(function () {
+          mensagemSucesso('Partida cadastrada com sucesso!');
+          navigate('/listagem-partidas');
         })
         .catch(function (error) {
-          mensagemErro(error.response.data);
+          mensagemErro(error.response?.data);
         });
     } else {
       await axios
         .put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
         })
-        .then(function (response) {
-          mensagemSucesso(`Partida alterada com sucesso!`);
-          navigate(`/listagem-partidas`);
+        .then(function () {
+          mensagemSucesso('Partida alterada com sucesso!');
+          navigate('/listagem-partidas');
         })
         .catch(function (error) {
-          mensagemErro(error.response.data);
+          mensagemErro(error.response?.data);
         });
     }
   }
@@ -77,18 +81,16 @@ function CadastroPartidas() {
       await axios.get(`${baseURL}/${idParam}`).then((response) => {
         setDados(response.data);
       });
+
       setId(dados.id);
       setIdTorneio(dados.idTorneio);
-      setIdResultado(dados.idResultado);
       setStatus(dados.status);
     }
   }
 
-  const [dadosTorneio, setDadosTorneio] = React.useState(null);
-  
   useEffect(() => {
     axios.get(`${BASE_URL}/torneios`).then((response) => {
-      setDadosTorneio(response.data);
+      setDadosTorneios(response.data);
     });
   }, []);
 
@@ -97,27 +99,26 @@ function CadastroPartidas() {
   }, [id]);
 
   if (!dados) return null;
-  if (!dadosTorneio) return null
+  if (!dadosTorneios) return null;
 
   return (
-    <div className='container'>
-      <Card title={`Cadastrar partida`}>
-        <div className='row'>
-          <div className='col-lg-12'>
-            <div className='bs-component'>
-    
-              <FormGroup label='Torneio: *' htmlFor='selectTorneio'>
+    <div className="container">
+      <Card title="Cadastro de Partida">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="bs-component">
+
+              <FormGroup label="Torneio:" htmlFor="selectTorneio">
                 <select
-                  className='form-select'
-                  id='selectTorneio'
-                  name='idTorneio'
+                  className="form-select"
                   value={idTorneio}
-                  onChange={(e) => setIdTorneio(e.target.value)}
+                  onChange={(e) =>
+                    setIdTorneio(Number(e.target.value))
+                  }
                 >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosTorneio.map((dado) => (
+                  <option value={0}>Selecione</option>
+
+                  {dadosTorneios.map((dado) => (
                     <option key={dado.id} value={dado.id}>
                       {dado.nome}
                     </option>
@@ -125,48 +126,37 @@ function CadastroPartidas() {
                 </select>
               </FormGroup>
 
-              <FormGroup label='Status: *' htmlFor='selectStatus'>
+              <FormGroup label="Status:" htmlFor="status">
                 <select
-                  className='form-select'
-                  id='selectStatus'
-                  name='status'
+                  className="form-select"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                 >
-                  <option value='0'>
-                    {' '}
-                  </option>
-                  <option value='PENDENTE'>
-                    {'Pendente'}
-                  </option>
-                  <option value='AO_VIVO'>
-                    {'Ao vivo'}
-                  </option>
-                  <option value='FINALIZADA'>
-                    {'Finalizada'}
-                  </option>
-                  <option value='CANCELADA'>
-                    {'Cancelada'}
-                  </option>
+                  <option value="PENDENTE">Pendente</option>
+                  <option value="AO_VIVO">Ao vivo</option>
+                  <option value="FINALIZADA">Finalizada</option>
+                  <option value="CANCELADA">Cancelada</option>
                 </select>
               </FormGroup>
 
-              <Stack spacing={1} padding={1} direction='row'>
+              <Stack spacing={1} padding={1} direction="row">
                 <button
                   onClick={salvar}
-                  type='button'
-                  className='btn btn-success'
+                  type="button"
+                  className="btn btn-success"
                 >
                   Salvar
                 </button>
+
                 <button
                   onClick={inicializar}
-                  type='button'
-                  className='btn btn-danger'
+                  type="button"
+                  className="btn btn-danger"
                 >
                   Cancelar
                 </button>
               </Stack>
+
             </div>
           </div>
         </div>

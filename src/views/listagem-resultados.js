@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Card from '../components/card';
-
 import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
@@ -21,85 +20,118 @@ const baseURL = `${BASE_URL}/resultados`;
 function ListagemResultados() {
   const navigate = useNavigate();
 
+  const [dados, setDados] = React.useState([]);
+
   const cadastrar = () => {
-    navigate(`/cadastro-resultados`);
+    navigate('/cadastro-resultados');
   };
 
   const editar = (id) => {
     navigate(`/cadastro-resultados/${id}`);
   };
 
-  const [dados, setDados] = React.useState(null);
-
   async function excluir(id) {
-    let data = JSON.stringify({ id });
-    let url = `${baseURL}/${id}`;
-    console.log(url);
-    await axios
-      .delete(url, data, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      .then(function (response) {
-        mensagemSucesso(`Resultado excluído com sucesso!`);
-        setDados(
-          dados.filter((dado) => {
-            return dado.id !== id;
-          })
-        );
-      })
-      .catch(function (error) {
-        mensagemErro(`Erro ao excluir o resultado`);
-      });
+    try {
+      await axios.delete(`${baseURL}/${id}`);
+
+      mensagemSucesso('Resultado excluído com sucesso!');
+
+      setDados((dadosAntigos) =>
+        dadosAntigos.filter((dado) => dado.id !== id)
+      );
+    } catch (error) {
+      mensagemErro('Erro ao excluir o resultado');
+    }
   }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
-      setDados(response.data);
-    });
+    axios
+      .get(baseURL)
+      .then((response) => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro('Erro ao carregar resultados');
+      });
   }, []);
 
-  if (!dados) return null;
-
   return (
-    <div className='container'>
-      <Card title='Listagem de Resultados'>
-        <div className='row'>
-          <div className='col-lg-12'>
-            <div className='bs-component'>
+    <div className="container">
+      <Card title="Listagem de Resultados">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="bs-component">
               <button
-                type='button'
-                className='btn btn-warning'
-                onClick={() => cadastrar()}
+                type="button"
+                className="btn btn-warning mb-3"
+                onClick={cadastrar}
               >
                 Novo Resultado
               </button>
-              <table className='table table-hover'>
+
+              <table className="table table-hover">
                 <thead>
                   <tr>
-                    <th scope='col'>Equipe Mandante</th>
-                    <th scope='col'>Gols Equipe Mandante</th>
-                    <th scope='col'>Equipe Visitante</th>
-                    <th scope='col'>Gols Equipe Visitante</th>
-                    <th scope='col'>Ações</th>
+                    <th>Mandante</th>
+                    <th className="text-center">Placar</th>
+                    <th>Visitante</th>
+                    <th className="text-center">Prorrogação</th>
+                    <th className="text-center">Pênaltis</th>
+                    <th className="text-center">Ações</th>
                   </tr>
                 </thead>
+
                 <tbody>
+                  {dados.length === 0 && (
+                    <tr>
+                      <td colSpan="6" className="text-center">
+                        Nenhum resultado cadastrado
+                      </td>
+                    </tr>
+                  )}
+
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.nomeEquipeMandante}</td>
-                      <td>{dado.golsMandante}</td>
+
+                      <td className="text-center">
+                        {dado.golsMandante} x {dado.golsVisitante}
+
+                        {dado.penaltis &&
+                          dado.penaltisMandante != null &&
+                          dado.penaltisVisitante != null && (
+                            <div style={{ fontSize: '12px' }}>
+                              Pênaltis: {dado.penaltisMandante} x{' '}
+                              {dado.penaltisVisitante}
+                            </div>
+                          )}
+                      </td>
+
                       <td>{dado.nomeEquipeVisitante}</td>
-                      <td>{dado.golsVisitante}</td>
+
+                      <td className="text-center">
+                        {dado.prorrogacao ? 'Sim' : 'Não'}
+                      </td>
+
+                      <td className="text-center">
+                        {dado.penaltis ? 'Sim' : 'Não'}
+                      </td>
+
                       <td>
-                        <Stack spacing={1} padding={0} direction='row' justifyContent={'center'}>
+                        <Stack
+                          spacing={1}
+                          direction="row"
+                          justifyContent="center"
+                        >
                           <IconButton
-                            aria-label='edit'
+                            aria-label="editar"
                             onClick={() => editar(dado.id)}
                           >
                             <EditIcon />
                           </IconButton>
+
                           <IconButton
-                            aria-label='delete'
+                            aria-label="excluir"
                             onClick={() => excluir(dado.id)}
                           >
                             <DeleteIcon />
@@ -109,7 +141,7 @@ function ListagemResultados() {
                     </tr>
                   ))}
                 </tbody>
-              </table>{' '}
+              </table>
             </div>
           </div>
         </div>

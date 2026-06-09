@@ -71,7 +71,7 @@ function ListagemJogadoresEquipe() {
 
                 {dados.map((dado) => (
                   <tr key={dado.id}>
-                    <td>{dado.nomeJogador}</td>
+                    <td>{dado.nome}</td>
                     <td className="text-center">
                       <Stack direction="row" justifyContent="center">
                         <IconButton onClick={() => excluir(dado.id)}>

@@ -1,10 +1,7 @@
 import React from 'react';
 
 import Card from '../components/card';
-
 import { mensagemSucesso, mensagemErro } from '../components/toastr';
-
-import { Plus } from 'lucide-react';
 
 import '../custom.css';
 
@@ -23,86 +20,120 @@ const baseURL = `${BASE_URL}/partidas`;
 function ListagemPartidas() {
   const navigate = useNavigate();
 
+  const [dados, setDados] = React.useState([]);
+
   const cadastrar = () => {
-    navigate(`/cadastro-partidas`);
+    navigate('/cadastro-partidas');
   };
 
   const editar = (id) => {
     navigate(`/cadastro-partidas/${id}`);
   };
 
-  const [dados, setDados] = React.useState(null);
-
   async function excluir(id) {
-    let data = JSON.stringify({ id });
-    let url = `${baseURL}/${id}`;
-    console.log(url);
-    await axios
-      .delete(url, data, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      .then(function (response) {
-        mensagemSucesso(`Partida excluída com sucesso!`);
-        setDados(
-          dados.filter((dado) => {
-            return dado.id !== id;
-          })
-        );
-      })
-      .catch(function (error) {
-        mensagemErro(`Erro ao excluir partida`);
-      });
+    try {
+      await axios.delete(`${baseURL}/${id}`);
+
+      mensagemSucesso('Partida excluída com sucesso!');
+
+      setDados((dadosAntigos) =>
+        dadosAntigos.filter((dado) => dado.id !== id)
+      );
+    } catch (error) {
+      mensagemErro('Erro ao excluir partida');
+    }
   }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
-      setDados(response.data);
-    });
+    axios
+      .get(baseURL)
+      .then((response) => {
+        setDados(response.data);
+      })
+      .catch(() => {
+        mensagemErro('Erro ao carregar partidas');
+      });
   }, []);
 
-  if (!dados) return null;
-
   return (
-    <div className='container'>
-      <Card title='Listagem de Partidas'>
-        <div className='row'>
-          <div className='col-lg-12'>
-            <div className='bs-component'>
+    <div className="container">
+      <Card title="Listagem de Partidas">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="bs-component">
               <button
-                type='button'
-                className='btn btn-warning'
-                onClick={() => cadastrar()}
+                type="button"
+                className="btn btn-warning mb-3"
+                onClick={cadastrar}
               >
                 Nova Partida
               </button>
-              <table className='table table-hover'>
+
+              <table className="table table-hover">
                 <thead>
                   <tr>
-                    <th scope='col'>Nome Torneio</th>
-                    <th scope='col'>TIME A</th>
-                    <th scope='col'>TIME B</th>
-                    <th scope='col'>Status</th>
-                    <th scope='col'>Ações</th>
+                    <th>Torneio</th>
+                    <th>Mandante</th>
+                    <th>Visitante</th>
+                    <th>Status</th>
+                    <th className="text-center">Ações</th>
                   </tr>
                 </thead>
+
                 <tbody>
+                  {dados.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="5"
+                        className="text-center"
+                      >
+                        Nenhuma partida cadastrada
+                      </td>
+                    </tr>
+                  )}
+
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.nomeTorneio}</td>
-                      <td>{dado.nomeCOLOCARTIMEAQUI}</td>
-                      <td>{dado.nomeCOLOCARTIMEAQUI}</td>
-                      <td>{dado.status}</td>
                       <td>
-                        <Stack spacing={1} padding={0} direction='row' justifyContent={'center'}>
+                        {dado.nomeTorneio}
+                      </td>
+
+                      <td>
+                        {
+                          dado.resultado?.equipeMandante
+                            ?.nome
+                        }
+                      </td>
+
+                      <td>
+                        {
+                          dado.resultado?.equipeVisitante
+                            ?.nome
+                        }
+                      </td>
+
+                      <td>{dado.status}</td>
+
+                      <td>
+                        <Stack
+                          spacing={1}
+                          direction="row"
+                          justifyContent="center"
+                        >
                           <IconButton
-                            aria-label='edit'
-                            onClick={() => editar(dado.id)}
+                            aria-label="editar"
+                            onClick={() =>
+                              editar(dado.id)
+                            }
                           >
                             <EditIcon />
                           </IconButton>
+
                           <IconButton
-                            aria-label='delete'
-                            onClick={() => excluir(dado.id)}
+                            aria-label="excluir"
+                            onClick={() =>
+                              excluir(dado.id)
+                            }
                           >
                             <DeleteIcon />
                           </IconButton>
@@ -111,7 +142,7 @@ function ListagemPartidas() {
                     </tr>
                   ))}
                 </tbody>
-              </table>{' '}
+              </table>
             </div>
           </div>
         </div>
