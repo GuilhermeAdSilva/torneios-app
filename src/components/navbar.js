@@ -30,26 +30,20 @@ function Navbar(props) {
         </button>
         <div className='collapse navbar-collapse' id='navbarResponsive'>
 
+          <ul className='navbar-nav'>
+            <NavbarItem render='true' href='/listagem-equipes' label='Equipes' />
+          </ul>
+
+          <ul className='navbar-nav'>
+            <NavbarItem render='true' href='/listagem-jogadores' label='Jogadores' />
+          </ul>
 
           <ul className='navbar-nav'>
             <NavbarItem render='true' href='/listagem-torneios' label='Torneios' />
           </ul>
-
-          
-          <ul className='navbar-nav'>
-            <NavbarItem render='true' href='/listagem-jogadores' label='Jogadores' />
-          </ul>
-          
-          <ul className='navbar-nav'>
-            <NavbarItem render='true' href='/listagem-equipes' label='Equipes' />
-          </ul>
          
           <ul className='navbar-nav'>
             <NavbarItem render='true' href='/listagem-inscricoes' label='Inscrições' />
-          </ul>
-
-          <ul className='navbar-nav'>
-            <NavbarItem render='true' href='/listagem-resultados' label='Resultados' />
           </ul>
 
           <ul className='navbar-nav'>

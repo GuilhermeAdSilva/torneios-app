@@ -12,7 +12,6 @@ import '../custom.css';
 
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
-import { BASE_URL2 } from '../config/axios';
 
 function CadastroEquipes() {
   const { idParam } = useParams();

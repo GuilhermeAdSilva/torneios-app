@@ -74,6 +74,7 @@ function ListagemPartidas() {
                   <tr>
                     <th>Torneio</th>
                     <th>Mandante</th>
+                    <th>Placar</th>
                     <th>Visitante</th>
                     <th>Status</th>
                     <th className="text-center">Ações</th>
@@ -83,10 +84,7 @@ function ListagemPartidas() {
                 <tbody>
                   {dados.length === 0 && (
                     <tr>
-                      <td
-                        colSpan="5"
-                        className="text-center"
-                      >
+                      <td colSpan="6" className="text-center">
                         Nenhuma partida cadastrada
                       </td>
                     </tr>
@@ -94,23 +92,15 @@ function ListagemPartidas() {
 
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>
-                        {dado.nomeTorneio}
-                      </td>
+                      <td>{dado.nomeTorneio}</td>
+
+                      <td>{dado.nomeEquipeMandante}</td>
 
                       <td>
-                        {
-                          dado.resultado?.equipeMandante
-                            ?.nome
-                        }
+                        {dado.golsMandante ?? 0} x {dado.golsVisitante ?? 0}
                       </td>
 
-                      <td>
-                        {
-                          dado.resultado?.equipeVisitante
-                            ?.nome
-                        }
-                      </td>
+                      <td>{dado.nomeEquipeVisitante}</td>
 
                       <td>{dado.status}</td>
 
@@ -122,18 +112,14 @@ function ListagemPartidas() {
                         >
                           <IconButton
                             aria-label="editar"
-                            onClick={() =>
-                              editar(dado.id)
-                            }
+                            onClick={() => editar(dado.id)}
                           >
                             <EditIcon />
                           </IconButton>
 
                           <IconButton
                             aria-label="excluir"
-                            onClick={() =>
-                              excluir(dado.id)
-                            }
+                            onClick={() => excluir(dado.id)}
                           >
                             <DeleteIcon />
                           </IconButton>
