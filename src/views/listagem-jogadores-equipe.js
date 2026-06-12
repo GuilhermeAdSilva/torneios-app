@@ -5,7 +5,7 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
 import { IconButton } from '@mui/material';
@@ -17,7 +17,6 @@ import { BASE_URL } from '../config/axios';
 const baseURL = `${BASE_URL}/jogadores`;
 
 function ListagemJogadoresEquipe() {
-  const navigate = useNavigate();
   const { idEquipe } = useParams();
 
   const [dados, setDados] = React.useState([]);
@@ -25,45 +24,90 @@ function ListagemJogadoresEquipe() {
 
   async function excluir(id) {
     try {
-      await axios.delete(`${baseURL}/${id}`);
-      mensagemSucesso('Jogador removido da equipe com sucesso!');
+      const response = await axios.get(`${baseURL}/${id}`);
 
-      setDados(dados.filter((dado) => dado.id !== id));
+      const jogadorAtualizado = {
+        ...response.data,
+        idEquipe: null,
+        nomeEquipe: null
+      };
+
+      console.log('Enviando:', jogadorAtualizado);
+
+      await axios.put(
+        `${baseURL}/${id}`,
+        jogadorAtualizado,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      mensagemSucesso(
+        'Jogador removido da equipe com sucesso!'
+      );
+
+      setDados(
+        dados.filter((dado) => dado.id !== id)
+      );
     } catch (error) {
-      mensagemErro('Erro ao remover jogador da equipe');
+      console.error(error);
+
+      mensagemErro(
+        error?.response?.data?.message ||
+        'Erro ao remover jogador da equipe'
+      );
     }
   }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
+    carregarJogadores();
+  }, [idEquipe]);
+
+  async function carregarJogadores() {
+    try {
+      const response = await axios.get(baseURL);
+
       const jogadoresEquipe = response.data.filter(
-        (jogador) => jogador.idEquipe === Number(idEquipe)
+        (jogador) =>
+          jogador.idEquipe === Number(idEquipe)
       );
 
       setDados(jogadoresEquipe);
 
       if (jogadoresEquipe.length > 0) {
-        setNomeEquipe(jogadoresEquipe[0].nomeEquipe);
+        setNomeEquipe(
+          jogadoresEquipe[0].nomeEquipe
+        );
       }
-    });
-  }, [idEquipe]);
+    } catch (error) {
+      mensagemErro(
+        'Erro ao carregar jogadores da equipe'
+      );
+    }
+  }
 
   return (
-    <div className="container">
+    <div className='container'>
       <Card title={`Jogadores da Equipe ${nomeEquipe || ''}`}>
-        <div className="row">
-          <div className="col-lg-12">
-            <table className="table table-hover">
+        <div className='row'>
+          <div className='col-lg-12'>
+            <table className='table table-hover'>
               <thead>
                 <tr>
-                  <th>Jogadores</th>
-                  <th className="text-center">Excluir</th>
+                  <th>Jogador</th>
+                  <th className='text-center'>Remover</th>
                 </tr>
               </thead>
+
               <tbody>
                 {dados.length === 0 && (
                   <tr>
-                    <td colSpan="2" className="text-center">
+                    <td
+                      colSpan='2'
+                      className='text-center'
+                    >
                       Nenhum jogador cadastrado nesta equipe
                     </td>
                   </tr>
@@ -72,9 +116,15 @@ function ListagemJogadoresEquipe() {
                 {dados.map((dado) => (
                   <tr key={dado.id}>
                     <td>{dado.nome}</td>
-                    <td className="text-center">
-                      <Stack direction="row" justifyContent="center">
-                        <IconButton onClick={() => excluir(dado.id)}>
+
+                    <td className='text-center'>
+                      <Stack
+                        direction='row'
+                        justifyContent='center'
+                      >
+                        <IconButton
+                          onClick={() => excluir(dado.id)}
+                        >
                           <DeleteIcon />
                         </IconButton>
                       </Stack>
