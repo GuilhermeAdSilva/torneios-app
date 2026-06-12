@@ -13,146 +13,129 @@ import '../custom.css';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-function CadastrojogadoresEquipe() {
+function CadastroJogadoresEquipe() {
   const navigate = useNavigate();
 
-  const { idParam, idEquipe: idEquipeParam } = useParams();
+  const { idEquipe } = useParams();
 
   const baseURL = `${BASE_URL}/jogadores`;
 
-  const [id, setId] = useState('');
-  const [idEquipe, setIdEquipe] = useState(0);
-  const [nomeEquipe, setNomeEquipe] = useState('');
+  const [jogador, setJogador] = useState(null);
   const [idJogador, setIdJogador] = useState(0);
-  const [nomeJogador, setNomeJogador] = useState('');
-  const [dados, setDados] = useState([]);
 
-  const [dadosJogadores, setDadosJogadores] = useState(null);
-  const [dadosTimes, setDadosTimes] = useState(null);
+  const [dadosJogadores, setDadosJogadores] = useState([]);
 
-  function inicializar() {
-    setId('');
-    setIdEquipe(0);
-    setNomeEquipe('');
-    setIdJogador(0);
-    setNomeJogador('');
+  useEffect(() => {
+    carregarJogadores();
+  }, []);
+
+  async function carregarJogadores() {
+    try {
+      const response = await axios.get(baseURL);
+
+      setDadosJogadores(response.data);
+    } catch (error) {
+      mensagemErro('Erro ao carregar jogadores');
+    }
+  }
+
+  async function selecionarJogador(id) {
+    try {
+      const response = await axios.get(`${baseURL}/${id}`);
+
+      setJogador(response.data);
+      setIdJogador(id);
+    } catch (error) {
+      mensagemErro('Erro ao carregar jogador');
+    }
   }
 
   async function salvar() {
-    let data = {
-      id,
-      idEquipe,
-      nomeEquipe,
-      idJogador,
-      nomeJogador,
-    };
-
-    data = JSON.stringify(data);
+    if (!jogador) {
+      mensagemErro('Selecione um jogador');
+      return;
+    }
 
     try {
-      if (!idParam) {
-        await axios.post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        });
-        mensagemSucesso('Inscrição realizada com sucesso!');
-        navigate('/listagem-equipes');
-      } else {
-        await axios.put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        });
-        mensagemSucesso('Inscrição alterada com sucesso!');
-        navigate('/listagem-inscricoes');
-      }
+      const jogadorAtualizado = {
+        ...jogador,
+        idEquipe: Number(idEquipe)
+      };
+
+      await axios.put(
+        `${baseURL}/${jogador.id}`,
+        jogadorAtualizado,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      mensagemSucesso('Jogador associado à equipe com sucesso!');
+
+      navigate('/listagem-equipes');
     } catch (error) {
-      mensagemErro(error?.response?.data || 'Erro ao salvar');
+      mensagemErro(
+        error?.response?.data ||
+          'Erro ao associar jogador à equipe'
+      );
     }
   }
-
-  async function buscar() {
-    if (idParam) {
-      const response = await axios.get(`${baseURL}/${idParam}`);
-      const d = response.data;
-
-      setDados(d);
-      setId(d.id);
-      setIdEquipe(d.idEquipe);
-      setNomeEquipe(d.nomeEquipe);
-      setIdJogador(d.idJogador);
-      setNomeJogador(d.nomeJogador);
-    }
-  }
-
-  useEffect(() => {
-    axios.get(`${BASE_URL}/jogadores`).then((response) => {
-      setDadosJogadores(response.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    buscar();
-  }, [idParam]);
-
-  useEffect(() => {
-    if (idEquipeParam) {
-      setIdEquipe(Number(idEquipeParam));
-    }
-  }, [idEquipeParam])
-
-  if (!dadosJogadores || !dadosTimes) return null;
 
   return (
-    <div className="container">
-      <Card title="Adicionar Jogador na Equipe">
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="bs-component">
+    <div className='container'>
+      <Card title='Adicionar Jogador à Equipe'>
+        <div className='row'>
+          <div className='col-lg-12'>
+            <div className='bs-component'>
 
-              <FormGroup label="Equipe: *" htmlFor="selectEquipe">
+              <FormGroup
+                label='Jogador: *'
+                htmlFor='selectJogador'
+              >
                 <select
-                  className="form-select"
-                  id="selectEquipe"
-                  value={idEquipe}
-                  onChange={(e) => setIdEquipe(Number(e.target.value))}
-                  disabled
-                >
-                  <option value={0}></option>
-                  {dadosTimes.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nome}
-                    </option>
-                  ))}
-                </select>
-              </FormGroup>
-
-              <FormGroup label="Jogador: *" htmlFor="selectJogador">
-                <select
-                  className="form-select"
-                  id="selectJogador"
+                  className='form-select'
+                  id='selectJogador'
                   value={idJogador}
-                  onChange={(e) => setIdJogador(Number(e.target.value))}
+                  onChange={(e) =>
+                    selecionarJogador(e.target.value)
+                  }
                 >
-                  <option value={0}></option>
+                  <option value='0'>
+                    Selecione um jogador
+                  </option>
+
                   {dadosJogadores.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
+                    <option
+                      key={dado.id}
+                      value={dado.id}
+                    >
                       {dado.nome}
                     </option>
                   ))}
                 </select>
               </FormGroup>
 
-              <Stack spacing={1} padding={1} direction="row">
+              <Stack
+                spacing={1}
+                padding={1}
+                direction='row'
+              >
                 <button
                   onClick={salvar}
-                  type="button"
-                  className="btn btn-success"
+                  type='button'
+                  className='btn btn-success'
                 >
                   Salvar
                 </button>
 
                 <button
-                  onClick={inicializar}
-                  type="button"
-                  className="btn btn-danger"
+                  onClick={() =>
+                    navigate('/listagem-equipes')
+                  }
+                  type='button'
+                  className='btn btn-danger'
                 >
                   Cancelar
                 </button>
@@ -166,4 +149,4 @@ function CadastrojogadoresEquipe() {
   );
 }
 
-export default CadastrojogadoresEquipe;
+export default CadastroJogadoresEquipe;
