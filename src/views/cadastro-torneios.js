@@ -144,7 +144,7 @@ function CadastroTorneios() {
               </FormGroup>
 
 
-              <FormGroup label='Descrição: *' htmlFor='selectDescricao'>
+              <FormGroup label='Descrição: ' htmlFor='selectDescricao'>
                 <input
                   type='text'
                   id='inputDescricao'

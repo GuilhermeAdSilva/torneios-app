@@ -11,6 +11,7 @@ import Stack from '@mui/material/Stack';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
@@ -28,6 +29,10 @@ function ListagemPartidas() {
 
   const editar = (id) => {
     navigate(`/cadastro-partidas/${id}`);
+  };
+
+  const adicionarResultado = (id) => {
+    navigate(`/cadastro-partidas-resultado/${id}`);
   };
 
   async function excluir(id) {
@@ -97,7 +102,9 @@ function ListagemPartidas() {
                       <td>{dado.nomeEquipeMandante}</td>
 
                       <td>
-                        {dado.golsMandante ?? 0} x {dado.golsVisitante ?? 0}
+                        {dado.status === 'FINALIZADA' || dado.status === 'AO_VIVO'
+                          ? `${dado.golsMandante ?? 0} x ${dado.golsVisitante ?? 0}`
+                          : '-'}
                       </td>
 
                       <td>{dado.nomeEquipeVisitante}</td>
@@ -110,12 +117,25 @@ function ListagemPartidas() {
                           direction="row"
                           justifyContent="center"
                         >
-                          <IconButton
-                            aria-label="editar"
-                            onClick={() => editar(dado.id)}
-                          >
-                            <EditIcon />
-                          </IconButton>
+                          {dado.status !== 'FINALIZADA' && (
+                            <IconButton
+                              aria-label="resultado"
+                              onClick={() =>
+                                adicionarResultado(dado.id)
+                              }
+                            >
+                              <SportsSoccerIcon />
+                            </IconButton>
+                          )}
+
+                          {dado.status !== 'FINALIZADA' && (
+                            <IconButton
+                              aria-label="editar"
+                              onClick={() => editar(dado.id)}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          )}
 
                           <IconButton
                             aria-label="excluir"

@@ -44,6 +44,21 @@ function CadastroJogadores() {
   }
 
   async function salvar() {
+    if (senha != confirmacaoSenha) {
+      mensagemErro(
+              'Confirmação de senha inválida!'
+            );
+            return;
+    }
+
+    if (senha.length < 8) {
+      mensagemErro(
+              'A senha deve ter pelo menos 8 caractéres'
+            );
+            return;
+    }
+
+
     let data = { id, nome, email, senha, confirmacaoSenha };
     data = JSON.stringify(data);
     if (idParam == null) {
