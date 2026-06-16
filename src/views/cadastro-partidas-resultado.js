@@ -25,12 +25,12 @@ function CadastroPartidasResultado() {
   const [idEquipeMandante, setIdEquipeMandante] =
     useState(null);
   const [nomeEquipeMandante, setNomeEquipeMandante] =
-    useState('');
+    useState("");
 
   const [idEquipeVisitante, setIdEquipeVisitante] =
     useState(null);
   const [nomeEquipeVisitante, setNomeEquipeVisitante] =
-    useState('');
+    useState("");
 
   const [golsMandante, setGolsMandante] = useState(0);
   const [golsVisitante, setGolsVisitante] = useState(0);
@@ -118,6 +118,28 @@ function CadastroPartidasResultado() {
     ) {
       mensagemErro(
         'Resultado inválido para prorrogação.'
+      );
+      return;
+    }
+
+    if (
+      Number(penaltisMandante) < 0 ||
+      Number(penaltisVisitante) < 0
+    ) {
+      mensagemErro(
+        'Resultado inválido para penaltis.'
+      );
+      return;
+    }
+
+    if (
+      Number(penaltisMandante) -
+      Number(penaltisVisitante) > 2 ||
+      Number(penaltisVisitante) -
+      Number(penaltisMandante) > 2
+    ) {
+      mensagemErro(
+        'Resultado inválido para penaltis.'
       );
       return;
     }
