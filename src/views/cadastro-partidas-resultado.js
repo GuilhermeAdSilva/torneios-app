@@ -10,7 +10,7 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';
+import api from '../config/axios';
 import { BASE_URL } from '../config/axios';
 
 function CadastroPartidasResultado() {
@@ -44,7 +44,7 @@ function CadastroPartidasResultado() {
 
   async function buscar() {
     try {
-      const response = await axios.get(`${baseURL}/${idPartida}`);
+      const response = await api.get(`${baseURL}/${idPartida}`);
 
       console.log(response.data);
 
@@ -58,7 +58,7 @@ function CadastroPartidasResultado() {
     }
 
     try {
-      const response = await axios.get(
+      const response = await api.get(
         `${baseURL}/${idPartida}`
       );
 
@@ -191,7 +191,7 @@ function CadastroPartidasResultado() {
     };
 
     try {
-      await axios.put(
+      await api.put(
         `${baseURL}/${idPartida}`,
         data
       );
@@ -267,7 +267,7 @@ function CadastroPartidasResultado() {
     };
 
     try {
-      await axios.put(
+      await api.put(
         `${baseURL}/${idPartida}`,
         data
       );

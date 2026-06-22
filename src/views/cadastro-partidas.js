@@ -10,7 +10,7 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';
+import api from '../config/axios';
 import { BASE_URL } from '../config/axios';
 
 function CadastroPartidas() {
@@ -71,13 +71,13 @@ function CadastroPartidas() {
 
     try {
       if (idParam == null) {
-        await axios.post(baseURL, data);
+        await api.post(baseURL, data);
 
         mensagemSucesso(
           'Partida cadastrada com sucesso!'
         );
       } else {
-        await axios.put(
+        await api.put(
           `${baseURL}/${idParam}`,
           data
         );
@@ -98,7 +98,7 @@ function CadastroPartidas() {
 
   async function buscar() {
     try {
-      const response = await axios.get(
+      const response = await api.get(
         `${baseURL}/${idParam}`
       );
 
@@ -120,7 +120,7 @@ function CadastroPartidas() {
   }
 
   useEffect(() => {
-    axios
+    api
       .get(`${BASE_URL}/torneios`)
       .then((response) => {
         setDadosTorneios(response.data);
@@ -131,7 +131,7 @@ function CadastroPartidas() {
         );
       });
 
-    axios
+    api
       .get(`${BASE_URL}/equipes`)
       .then((response) => {
         setDadosEquipes(response.data);

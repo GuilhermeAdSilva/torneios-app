@@ -10,7 +10,7 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';
+import api from '../config/axios';
 import { BASE_URL } from '../config/axios';
 
 function CadastroJogadoresEquipe() {
@@ -31,7 +31,7 @@ function CadastroJogadoresEquipe() {
 
   async function carregarJogadores() {
     try {
-      const response = await axios.get(baseURL);
+      const response = await api.get(baseURL);
 
       setDadosJogadores(response.data);
     } catch (error) {
@@ -41,7 +41,7 @@ function CadastroJogadoresEquipe() {
 
   async function selecionarJogador(id) {
     try {
-      const response = await axios.get(`${baseURL}/${id}`);
+      const response = await api.get(`${baseURL}/${id}`);
 
       setJogador(response.data);
       setIdJogador(id);
@@ -62,7 +62,7 @@ function CadastroJogadoresEquipe() {
         idEquipe: Number(idEquipe)
       };
 
-      await axios.put(
+      await api.put(
         `${baseURL}/${jogador.id}`,
         jogadorAtualizado,
         {
