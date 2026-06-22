@@ -12,7 +12,7 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import axios from 'axios';
+import api from '../config/axios';
 import { BASE_URL } from '../config/axios';
 
 const baseURL = `${BASE_URL}/gols`;
@@ -117,7 +117,7 @@ function ListagemGols() {
 
   async function excluir(id) {
     try {
-      await axios.delete(`${baseURL}/${id}`);
+      await api.delete(`${baseURL}/${id}`);
       mensagemSucesso('Gol excluído com sucesso!');
 
       const novosDados = dados.filter((dado) => dado.id !== id);
@@ -131,7 +131,7 @@ function ListagemGols() {
   }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
+    api.get(baseURL).then((response) => {
       setDados(response.data);
       setDadosOriginais(response.data);
     });

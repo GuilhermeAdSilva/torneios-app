@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import axios from 'axios';
+import api from '../config/axios';
 import { BASE_URL } from '../config/axios';
 
 const baseURL = `${BASE_URL}/jogadores`;
@@ -24,7 +24,7 @@ function ListagemJogadoresEquipe() {
 
   async function excluir(id) {
     try {
-      const response = await axios.get(`${baseURL}/${id}`);
+      const response = await api.get(`${baseURL}/${id}`);
 
       const jogadorAtualizado = {
         ...response.data,
@@ -34,7 +34,7 @@ function ListagemJogadoresEquipe() {
 
       console.log('Enviando:', jogadorAtualizado);
 
-      await axios.put(
+      await api.put(
         `${baseURL}/${id}`,
         jogadorAtualizado,
         {
@@ -67,7 +67,7 @@ function ListagemJogadoresEquipe() {
 
   async function carregarJogadores() {
     try {
-      const response = await axios.get(baseURL);
+      const response = await api.get(baseURL);
 
       const jogadoresEquipe = response.data.filter(
         (jogador) =>

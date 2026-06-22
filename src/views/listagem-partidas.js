@@ -13,7 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 
-import axios from 'axios';
+import api from '../config/axios';
 import { BASE_URL } from '../config/axios';
 
 const baseURL = `${BASE_URL}/partidas`;
@@ -37,7 +37,7 @@ function ListagemPartidas() {
 
   async function excluir(id) {
     try {
-      await axios.delete(`${baseURL}/${id}`);
+      await api.delete(`${baseURL}/${id}`);
 
       mensagemSucesso('Partida excluída com sucesso!');
 
@@ -50,7 +50,7 @@ function ListagemPartidas() {
   }
 
   React.useEffect(() => {
-    axios
+    api
       .get(baseURL)
       .then((response) => {
         setDados(response.data);
