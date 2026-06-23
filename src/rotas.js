@@ -22,6 +22,7 @@ import ListagemEscalacoes from './views/listagem-escalacoes';
 
 import CadastroGols from './views/cadastro-gols';
 import ListagemGols from './views/listagem-gols';
+import ListagemAssistencias from './views/listagem-assistencias';
 
 import ListagemPartidas from './views/listagem-partidas';
 import CadastroPartidas from './views/cadastro-partidas';
@@ -76,6 +77,7 @@ function Rotas() {
 
         <Route path="/listagem-gols" element={<ListagemGols />} />
         <Route path="/cadastro-gols/:idParam?" element={<CadastroGols />} />
+        <Route path="/listagem-assistencias" element={<ListagemAssistencias />} />
 
         <Route path="/listagem-cartoes-vermelhos" element={<ListagemVermelhos />} />
         <Route path="/cadastro-cartoes-vermelhos/:idParam?" element={<CadastroVermelhos />} />

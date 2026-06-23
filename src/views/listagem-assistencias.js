@@ -1,25 +1,14 @@
 import React from 'react';
 
 import Card from '../components/card';
-import { mensagemSucesso, mensagemErro } from '../components/toastr';
-
 import '../custom.css';
-
-import { useNavigate } from 'react-router-dom';
-
-import Stack from '@mui/material/Stack';
-import { IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 
 import api from '../config/axios';
 import { BASE_URL } from '../config/axios';
 
 const baseURL = `${BASE_URL}/gols`;
 
-function ListagemGols() {
-  const navigate = useNavigate();
-
+function ListagemAssistencias() {
   const [dados, setDados] = React.useState([]);
   const [dadosOriginais, setDadosOriginais] = React.useState([]);
   const [competicaoSelecionada, setCompeticaoSelecionada] = React.useState(null);
@@ -28,16 +17,7 @@ function ListagemGols() {
   const [tipoBusca, setTipoBusca] = React.useState('jogador');
   const [termoBusca, setTermoBusca] = React.useState('');
 
-  const cadastrar = () => {
-    navigate('/cadastro-gols');
-  };
-
-  const editar = (id) => {
-    navigate(`/cadastro-gols/${id}`);
-  };
-
   function gerarRanking(nomeCompeticao) {
-    // 1. Alinhado para filtrar comparando com a nova propriedade 'nomeTorneio'
     const golsDaCompeticao = dadosOriginais.filter(
       (dado) => dado.nomeTorneio === nomeCompeticao
     );
@@ -45,21 +25,23 @@ function ListagemGols() {
     const mapa = {};
 
     golsDaCompeticao.forEach((item) => {
-      const idJogadorGol = item.idJogadorGol;
+      const idGarçom = item.idJogadorAssistencia;
 
-      if (!mapa[idJogadorGol]) {
-        mapa[idJogadorGol] = {
-          idJogadorGol: item.idJogadorGol,
-          nomeJogadorGol: item.nomeJogadorGol,
-          totalGols: 0,
+      if (!idGarçom) return;
+
+      if (!mapa[idGarçom]) {
+        mapa[idGarçom] = {
+          idJogadorAssistencia: item.idJogadorAssistencia,
+          nomeJogadorAssistencia: item.nomeJogadorAssistencia,
+          totalAssistencias: 0,
         };
       }
 
-      mapa[idJogadorGol].totalGols += 1;
+      mapa[idGarçom].totalAssistencias += 1;
     });
 
     const rankingOrdenado = Object.values(mapa).sort(
-      (a, b) => b.totalGols - a.totalGols
+      (a, b) => b.totalAssistencias - a.totalAssistencias
     );
 
     setRanking(rankingOrdenado);
@@ -71,7 +53,6 @@ function ListagemGols() {
       return;
     }
 
-    // 2. Alinhado para filtrar comparando com a nova propriedade 'nomeTorneio'
     const filtrados = dadosOriginais.filter(
       (dado) => dado.nomeTorneio === nomeCompeticao
     );
@@ -97,12 +78,11 @@ function ListagemGols() {
 
     const filtrados = lista.filter((dado) => {
       if (tipo === 'jogador') {
-        return dado.nomeJogadorGol
+        return dado.nomeJogadorAssistencia
           ?.toLowerCase()
           .includes(valor.toLowerCase());
       }
 
-      // 3. Alinhado para buscar o texto digitado na propriedade 'nomeTorneio'
       return dado.nomeTorneio
         ?.toLowerCase()
         .includes(valor.toLowerCase());
@@ -118,35 +98,24 @@ function ListagemGols() {
     setTermoBusca('');
   }
 
-  async function excluir(id) {
-    try {
-      await api.delete(`${baseURL}/${id}`);
-      mensagemSucesso('Gol excluído com sucesso!');
-
-      const novosDados = dados.filter((dado) => dado.id !== id);
-      setDados(novosDados);
-      setDadosOriginais(
-        dadosOriginais.filter((dado) => dado.id !== id)
-      );
-    } catch (error) {
-      mensagemErro('Erro ao excluir a gol');
-    }
-  }
-
   React.useEffect(() => {
     api.get(baseURL).then((response) => {
-      setDados(response.data);
-      setDadosOriginais(response.data);
+      // Filtra para garantir que só apareçam na lista os gols que REALMENTE possuem assistência
+      const apenasComAssistencia = response.data.filter(
+        (gol) => gol.idJogadorAssistencia !== null && gol.nomeJogadorAssistencia !== null
+      );
+      setDados(apenasComAssistencia);
+      setDadosOriginais(apenasComAssistencia);
     });
   }, []);
 
   return (
     <div className="container">
-      <Card title="Listagem de Gols">
+      <Card title="Listagem de Assistências">
         <div className="row">
           <div className="col-lg-12">
 
-            <div className="row mb-3">
+            <div className="row mb-4">
               <div className="col-md-3">
                 <select
                   className="form-control"
@@ -156,7 +125,7 @@ function ListagemGols() {
                     aplicarBusca(termoBusca, e.target.value);
                   }}
                 >
-                  <option value="jogador">Jogador</option>
+                  <option value="jogador">Quem deu a Assistência</option>
                   <option value="competicao">Competição</option>
                 </select>
               </div>
@@ -165,7 +134,7 @@ function ListagemGols() {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder={`Pesquisar por ${tipoBusca}`}
+                  placeholder={`Pesquisar por ${tipoBusca === 'jogador' ? 'nome do jogador' : 'nome da competição'}`}
                   value={termoBusca}
                   onChange={(e) => {
                     setTermoBusca(e.target.value);
@@ -184,26 +153,18 @@ function ListagemGols() {
               </div>
             </div>
 
-            <button
-              type="button"
-              className="btn btn-warning mb-3"
-              onClick={cadastrar}
-            >
-              Novo Gol
-            </button>
-
             <table className="table table-hover">
               <thead>
                 <tr>
-                  <th>Nome</th>
+                  <th>Jogador da Assistência</th>
                   <th>Competição</th>
-                  <th>Ações</th>
+                  <th>Autor do Gol Beneficiado</th>
                 </tr>
               </thead>
               <tbody>
                 {dados.map((dado) => (
                   <tr key={dado.id}>
-                    <td>{dado.nomeJogadorGol}</td>
+                    <td style={{ fontWeight: '500' }}>{dado.nomeJogadorAssistencia}</td>
                     <td
                       style={{
                         cursor: 'pointer',
@@ -213,48 +174,45 @@ function ListagemGols() {
                             ? 'bold'
                             : 'normal',
                       }}
-                      onClick={() =>
-                        handleClickEst(dado.nomeTorneio)
-                      }
+                      onClick={() => handleClickEst(dado.nomeTorneio)}
                     >
-                      {/* 4. Renderizando dinamicamente o nome do Torneio vindo da DTO */}
                       {dado.nomeTorneio || 'Sem Competição'}
                     </td>
-                    <td>
-                      <Stack spacing={1} direction="row" justifyContent="center">
-                        <IconButton onClick={() => editar(dado.id)}>
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton onClick={() => excluir(dado.id)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </Stack>
+                    <td className="text-muted" style={{ fontSize: '0.95rem' }}>
+                      {dado.nomeJogadorGol}
                     </td>
                   </tr>
                 ))}
+                {dados.length === 0 && (
+                  <tr>
+                    <td colSpan="3" className="text-center text-muted">
+                      Nenhuma assistência encontrada com os filtros aplicados.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
 
             {competicaoSelecionada && ranking.length > 0 && (
               <div className="mt-5">
-                <h4>
-                  Jogadores com mais gols — {competicaoSelecionada}
+                <h4 className="text-success">
+                  Líderes de Assistências — {competicaoSelecionada}
                 </h4>
 
                 <table className="table table-striped mt-3">
                   <thead>
                     <tr>
-                      <th>#</th>
+                      <th style={{ width: '10%' }}>#</th>
                       <th>Jogador</th>
-                      <th>Total</th>
+                      <th style={{ width: '20%' }}>Total de Assistências</th>
                     </tr>
                   </thead>
                   <tbody>
                     {ranking.map((jogador, index) => (
-                      <tr key={jogador.idJogadorGol}>
-                        <td>{index + 1}</td>
-                        <td>{jogador.nomeJogadorGol}</td>
-                        <td>{jogador.totalGols}</td>
+                      <tr key={jogador.idJogadorAssistencia}>
+                        <td>{index + 1}º</td>
+                        <td>{jogador.nomeJogadorAssistencia}</td>
+                        <td style={{ fontWeight: 'bold' }}>{jogador.totalAssistencias}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -269,4 +227,4 @@ function ListagemGols() {
   );
 }
 
-export default ListagemGols;
+export default ListagemAssistencias;

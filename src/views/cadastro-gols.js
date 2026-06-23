@@ -15,75 +15,62 @@ import { BASE_URL } from '../config/axios';
 
 function CadastroGols() {
   const { idParam } = useParams();
-
   const navigate = useNavigate();
 
   const baseURL = `${BASE_URL}/gols`;
 
   const [id, setId] = useState('');
-  const [idJogador, setIdJogador] = useState(0);
-  const [idCompeticao, setIdCompeticao] = useState(0);
-  const [minuto, setMinuto] = useState('');
-  const [dados, setDados] = React.useState([]);
+  const [idPartida, setIdPartida] = useState(0);
+  const [idJogadorGol, setIdJogadorGol] = useState(0);
+  const [idJogadorAssistencia, setIdJogadorAssistencia] = useState(0);
 
-  function inicializar() {
-    if (idParam == null) {
+  const [dadosJogadores, setDadosJogadores] = useState(null);
+  const [dadosPartidas, setDadosPartidas] = useState(null);
+
+  function inicializar(dadosAEditar = null) {
+    if (idParam == null || !dadosAEditar) {
       setId('');
-      setIdJogador(0);
-      setIdCompeticao(0);
-      setMinuto('')
+      setIdPartida(0);
+      setIdJogadorGol(0);
+      setIdJogadorAssistencia(0);
     } else {
-      setId(dados.id);
-      setIdJogador(dados.idJogador);
-      setIdCompeticao(dados.idCompeticao);
-      setMinuto(dados.minuto);
+      setId(dadosAEditar.id || '');
+      setIdPartida(dadosAEditar.idPartida || dadosAEditar.partida?.id || 0);
+      setIdJogadorGol(dadosAEditar.idJogadorGol || dadosAEditar.jogadorGol?.id || 0);
+      setIdJogadorAssistencia(dadosAEditar.idJogadorAssistencia || dadosAEditar.jogadorAssistencia?.id || 0);
     }
   }
 
   async function salvar() {
-    let data = { id, idJogador, idCompeticao, minuto };
-    data = JSON.stringify(data);
+    const payload = {
+      id: id ? id : null,
+      idPartida: idPartida > 0 ? parseInt(idPartida) : null,
+      idJogadorGol: idJogadorGol > 0 ? parseInt(idJogadorGol) : null,
+      idJogadorAssistencia: idJogadorAssistencia > 0 ? parseInt(idJogadorAssistencia) : null
+    };
+
     if (idParam == null) {
       await api
-        .post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
+        .post(baseURL, payload)
+        .then(function () {
           mensagemSucesso(`Gol cadastrado com sucesso!`);
           navigate(`/listagem-gols`);
         })
         .catch(function (error) {
-          mensagemErro(error.response.data);
+          mensagemErro(error.response?.data || "Erro ao salvar gol.");
         });
     } else {
       await api
-        .put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
+        .put(`${baseURL}/${idParam}`, payload)
+        .then(function () {
           mensagemSucesso(`Gol alterado com sucesso!`);
           navigate(`/listagem-gols`);
         })
         .catch(function (error) {
-          mensagemErro(error.response.data);
+          mensagemErro(error.response?.data || "Erro ao alterar gol.");
         });
     }
   }
-
-  async function buscar() {
-    if (idParam != null) {
-      await api.get(`${baseURL}/${idParam}`).then((response) => {
-        setDados(response.data);
-      });
-      setId(dados.id);
-      setIdJogador(dados.idJogador);
-      setIdCompeticao(dados.idCompeticao);
-      setMinuto(dados.minuto);
-    }
-  }
-
-  const [dadosJogadores, setDadosJogadores] = React.useState(null);
-  const [dadosCompeticoes, setDadosCompeticoes] = React.useState(null);
 
   useEffect(() => {
     api.get(`${BASE_URL}/jogadores`).then((response) => {
@@ -92,64 +79,82 @@ function CadastroGols() {
   }, []);
 
   useEffect(() => {
-    api.get(`${BASE_URL}/edicoesTorneios`).then((response) => {
-      setDadosCompeticoes(response.data);
+    api.get(`${BASE_URL}/partidas`).then((response) => {
+      setDadosPartidas(response.data);
     });
   }, []);
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+    if (idParam != null) {
+      api.get(`${baseURL}/${idParam}`).then((response) => {
+        inicializar(response.data);
+      });
+    } else {
+      inicializar();
+    }
+  }, [idParam]);
 
-  if (!dados) return null;
-  if (!dadosJogadores) return null;
-  if (!dadosCompeticoes) return null;
+  if (!dadosJogadores || !dadosPartidas) return null;
 
   return (
     <div className='container'>
-      <Card title='Cadastro de Gol'>
+      <Card title={idParam ? 'Editar Gol' : 'Cadastro de Gol'}>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-                <FormGroup label='Jogador: *' htmlFor='selectJogadores'>
+              
+              <FormGroup label='Partida: *' htmlFor='selectPartida'>
                 <select
                   className='form-select'
-                  id='selectJogadores'
-                  name='idJogadores'
-                  value={idJogador}
-                  onChange={(e) => setIdJogador(e.target.value)}
+                  id='selectPartida'
+                  name='idPartida'
+                  value={idPartida}
+                  onChange={(e) => setIdPartida(e.target.value)}
                 >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosJogadores.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nome}
+                  <option value='0'>Selecione uma partida...</option>
+                  {dadosPartidas.map((partida) => (
+                    <option key={partida.id} value={partida.id}>
+                      Jogo #{partida.id} {partida.torneio?.nome ? ` - ${partida.torneio.nome}` : ''}
                     </option>
                   ))}
                 </select>
               </FormGroup>
 
-              <FormGroup label='Competição: *' htmlFor='selectCompeticao'>
+              <FormGroup label='Autor do Gol: *' htmlFor='selectJogadorGol'>
                 <select
                   className='form-select'
-                  id='selectCompeticao'
-                  name='idCompeticao'
-                  value={idCompeticao}
-                  onChange={(e) => setIdCompeticao(e.target.value)}
+                  id='selectJogadorGol'
+                  name='idJogadorGol'
+                  value={idJogadorGol}
+                  onChange={(e) => setIdJogadorGol(e.target.value)}
                 >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosCompeticoes.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nomeEdicao}
+                  <option value='0'>Selecione o jogador...</option>
+                  {dadosJogadores.map((jogador) => (
+                    <option key={jogador.id} value={jogador.id}>
+                      {jogador.nome}
                     </option>
                   ))}
                 </select>
               </FormGroup>
 
-              <Stack spacing={1} padding={1} direction='row'>
+              <FormGroup label='Assistência (Opcional):' htmlFor='selectJogadorAssistencia'>
+                <select
+                  className='form-select'
+                  id='selectJogadorAssistencia'
+                  name='idJogadorAssistencia'
+                  value={idJogadorAssistencia}
+                  onChange={(e) => setIdJogadorAssistencia(e.target.value)}
+                >
+                  <option value='0'>Nenhuma assistência (Gol individual)</option>
+                  {dadosJogadores.map((jogador) => (
+                    <option key={jogador.id} value={jogador.id}>
+                      {jogador.nome}
+                    </option>
+                  ))}
+                </select>
+              </FormGroup>
+
+              <Stack spacing={1} padding={1} direction='row' className="mt-4">
                 <button
                   onClick={salvar}
                   type='button'
@@ -158,11 +163,11 @@ function CadastroGols() {
                   Salvar
                 </button>
                 <button
-                  onClick={inicializar}
+                  onClick={() => navigate('/listagem-gols')}
                   type='button'
                   className='btn btn-danger'
                 >
-                  Cancelar
+                  Voltar
                 </button>
               </Stack>
             </div>
