@@ -37,7 +37,6 @@ function ListagemGols() {
   };
 
   function gerarRanking(nomeCompeticao) {
-    // 1. Alinhado para filtrar comparando com a nova propriedade 'nomeTorneio'
     const golsDaCompeticao = dadosOriginais.filter(
       (dado) => dado.nomeTorneio === nomeCompeticao
     );
@@ -71,7 +70,6 @@ function ListagemGols() {
       return;
     }
 
-    // 2. Alinhado para filtrar comparando com a nova propriedade 'nomeTorneio'
     const filtrados = dadosOriginais.filter(
       (dado) => dado.nomeTorneio === nomeCompeticao
     );
@@ -102,7 +100,6 @@ function ListagemGols() {
           .includes(valor.toLowerCase());
       }
 
-      // 3. Alinhado para buscar o texto digitado na propriedade 'nomeTorneio'
       return dado.nomeTorneio
         ?.toLowerCase()
         .includes(valor.toLowerCase());

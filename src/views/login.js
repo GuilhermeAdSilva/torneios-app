@@ -4,8 +4,6 @@ import Card from '../components/card';
 import FormGroup from '../components/form-group';
 import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
-// 1. ATENÇÃO AQUI: Verifique se a sua pasta "services" está realmente em "src/services"
-// Se não funcionar, tente mudar para: import api from './services/api'; (caso esteja dentro de views)
 import api from '../config/axios'; 
 
 import '../custom.css';
@@ -16,7 +14,6 @@ class Login extends React.Component {
     senha: '',
   };
 
-  // Código da função 'logar' corrigido dentro da estrutura da classe
   logar = async () => {
     if (!this.state.login || !this.state.senha) {
       mensagemErro('Por favor, preencha o login e a senha.');
@@ -24,7 +21,6 @@ class Login extends React.Component {
     }
 
     try {
-      // Usando 'api.post' em vez de 'axios.post' para usar a nossa configuração com o Bearer Token
       const resposta = await api.post('/usuarios/auth', {
         login: this.state.login,
         senha: this.state.senha
